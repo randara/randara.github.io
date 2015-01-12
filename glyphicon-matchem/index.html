@@ -1,0 +1,41 @@
+<!doctype html>
+<html ng-app="game">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="game.css">
+</head>
+
+<body ng-controller="Controller">
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+
+    <script type="text/javascript" src="game.js"></script>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4 text-center">
+			<h2>Glyphicon match'em</h2>
+
+		</br>
+
+		<div class="row">
+			<div class="col-md-4 text-center"> <p>Score: <span ng-bind="points"></span></p> </div>
+			<div class="col-md-4 text-center"> <p>Plays: <span ng-bind="plays"></span></p></div>
+			<div class="col-md-4 text-center"> <p>Cards: <span ng-bind="matches"></span>/<span ng-bind="total"></span></p></div>
+		</div>
+
+		</br>
+
+		<deck></deck>
+
+		</br>
+
+		<div class="row">
+			<div class="col-md-12 text-center"> <h3> <span ng-bind="message"></span></h3> </div>
+		</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>
