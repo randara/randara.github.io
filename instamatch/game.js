@@ -26,9 +26,17 @@ app.factory('cards',['$http',function($http){
 			return deck;
 		},
 
-		fetchPopular: function(callback){
+		fetchImages: function(tag, callback){
             
-            query = "https://api.instagram.com/v1/media/popular?client_id=642176ece1e7445e99244cec26f4de1f&callback=JSON_CALLBACK";
+            if(tag == 'popular'){
+				apiEndPoint = "https://api.instagram.com/v1/media/popular";
+            }
+            else{
+            	tag = tag.trim();
+            	apiEndPoint = "https://api.instagram.com/v1/tags/"+tag+"/media/recent";
+            }
+
+            query = apiEndPoint+"?client_id=642176ece1e7445e99244cec26f4de1f&callback=JSON_CALLBACK";
             
             $http.jsonp(query).success(function(response){
                 callback(response.data);
@@ -41,39 +49,59 @@ app.factory('cards',['$http',function($http){
 
 app.controller('Controller', ['$scope', 'cards', function($scope, cards) {
 
-	deck = [];
-	$scope.deck = [];
+	$scope.word = /^\s*\w*\s*$/;
 
-	cards.fetchPopular(function(data){
-		$scope.feed = data;
-		for (i = 0; i < 8; i++){
-			console.log($scope.feed[i].images.thumbnail);
-			deck[i] = $scope.feed[i].images.thumbnail.url;
+	$scope.gameStarted = false;
+
+	$scope.startGame = function(){
+
+		if (typeof $scope.tag == 'undefined'){
+			$scope.tag = 'popular';
 		}
 
-		deck = deck.concat(deck);
-		deck = shuffle(deck);
+		console.log($scope.tag);
 
-		for (i = 0; i < 16; i++){
-			card = {
-				src: deck[i],
-				show: 'images/back.jpg',
-				cleared: false,
-				flipped: false,
+		deck = [];
+		$scope.deck = [];
+
+		cards.fetchImages($scope.tag,function(data){
+			$scope.feed = data;
+			for (i = 0; i < 8; i++){
+				console.log($scope.feed[i].images.thumbnail);
+				deck[i] = $scope.feed[i].images.thumbnail.url;
 			}
-			$scope.deck[i] = card;
-		}
-	});
 
-	
-	$scope.total = 8;
-	$scope.plays = 0;
-	$scope.points = 0;
-	$scope.matches = 0;
-	$scope.message = '';
+			deck = deck.concat(deck);
+			deck = shuffle(deck);
 
-	$scope.slot1 = null;
-	$scope.slot2 = null;
+			for (i = 0; i < 16; i++){
+				card = {
+					src: deck[i],
+					show: 'images/back.jpg',
+					cleared: false,
+					flipped: false,
+				}
+				$scope.deck[i] = card;
+			}
+		});
+
+		
+		$scope.total = 8;
+		$scope.plays = 0;
+		$scope.points = 0;
+		$scope.matches = 0;
+		$scope.message = '';
+
+		$scope.slot1 = null;
+		$scope.slot2 = null;
+
+		$scope.gameStarted = true;
+
+	};
+
+	$scope.endGame = function(){
+		location.reload();
+	}
 
 	function shuffle(array) {
   		var currentIndex = array.length, temporaryValue, randomIndex ;
@@ -91,7 +119,7 @@ app.controller('Controller', ['$scope', 'cards', function($scope, cards) {
 		}
 
 		return array;
-	}
+	};
 
 	// Gamelogic
 	$scope.flip = function(c) {

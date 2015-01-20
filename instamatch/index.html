@@ -13,34 +13,51 @@
 
     <script type="text/javascript" src="ngFx.js"></script>
 
-	<div class="row">
-
-		<nav class="navbar-inverse navbar-default">
+	
+		<nav class="navbar-inverse">
   			<div class="container-fluid">
 	    		<div class="navbar-header">
-		      		<a class="navbar-brand" href="/">
+		      		<a class="navbar-brand" href="/instamatch">
 		        		InstaMatch
 		      		</a>
 	    		</div>
+
+	    		<form name="myForm" class="navbar-form navbar-right" role="search" ng-submit="startGame()" ng-hide="gameStarted">
+			        <div class="form-group">			        			          
+			       		<input name="myTag" type="text" class="form-control" placeholder="Select a tag" ng-model="tag" ng-pattern="word" ng-trim="false">
+			        </div>
+			        <button type="submit" class="btn btn-default" ng-show="!myForm.myTag.$error.pattern">Start game</button>
+			        <button type="button" class="btn-danger btn" ng-show="myForm.myTag.$error.pattern" disabled="disabled">Must be a single word!!</button>
+		     	</form>
+
+		     	<form class="navbar-form navbar-right" role="search" ng-submit="endGame()" ng-show="gameStarted">
+			        <div class="form-group">
+			         <p class="navbar-text" ng-show="gameStarted">Playing with {{tag}} images</p>
+			        </div>
+			        <button type="submit" class="btn btn-default">End game</button>
+		     	</form>
+
+		     	
+
   			</div>
 		</nav>
 
 		<div class="col-md-10 col-md-offset-1 text-center">
-		</br>
-
-		<div class="row">
-			<div class="col-md-3 text-center"> <p>Score: <span ng-bind="points"></span></p> </div>
-			<div class="col-md-3 text-center"> <p>Plays: <span ng-bind="plays"></span></p></div>
-			<div class="col-md-3 text-center"> <p>Cards: <span ng-bind="matches"></span>/<span ng-bind="total"></span></p></div>
-			<div class="col-md-3 text-center"> <p><span ng-bind="message"></span></p></div>
-		</div>
 
 		</br>
 
-		<deck></deck>
+			<div class="row">
+				<div class="col-md-3 text-center" ng-show="gameStarted"> <p>Score: <span ng-bind="points" ></span></p> </div>
+				<div class="col-md-3 text-center" ng-show="gameStarted"> <p>Plays: <span ng-bind="plays" ></span></p></div>
+				<div class="col-md-3 text-center" ng-show="gameStarted"> <p>Cards: <span ng-bind="matches" ></span>/<span ng-bind="total"></span></p></div>
+				<div class="col-md-3 text-center" ng-show="gameStarted"> <p><span ng-bind="message" ></span></p></div>
+			</div>
+
+			</br>
+
+			<deck></deck>
 
 		</div>
-	</div>
 
 </body>
 
