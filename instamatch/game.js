@@ -39,6 +39,7 @@ app.factory('cards',['$http',function($http){
             query = apiEndPoint+"?client_id=642176ece1e7445e99244cec26f4de1f&callback=JSON_CALLBACK";
             
             $http.jsonp(query).success(function(response){
+
                 callback(response.data);
 
             });
@@ -52,6 +53,7 @@ app.controller('Controller', ['$scope', 'cards', function($scope, cards) {
 	$scope.word = /^\s*\w*\s*$/;
 
 	$scope.gameStarted = false;
+	$scope.apiError = false;
 
 	$scope.startGame = function(){
 
@@ -59,43 +61,50 @@ app.controller('Controller', ['$scope', 'cards', function($scope, cards) {
 			$scope.tag = 'popular';
 		}
 
-		console.log($scope.tag);
-
 		deck = [];
 		$scope.deck = [];
 
 		cards.fetchImages($scope.tag,function(data){
-			$scope.feed = data;
-			for (i = 0; i < 8; i++){
-				console.log($scope.feed[i].images.thumbnail);
-				deck[i] = $scope.feed[i].images.thumbnail.url;
+
+			if (typeof data== 'undefined'){
+				$scope.error = 'Tag '+$scope.tag+' is not valid';
+				$scope.apiError = true;
 			}
-
-			deck = deck.concat(deck);
-			deck = shuffle(deck);
-
-			for (i = 0; i < 16; i++){
-				card = {
-					src: deck[i],
-					show: 'images/back.jpg',
-					cleared: false,
-					flipped: false,
+			else{
+				$scope.error = '';
+				$scope.apiError = false;
+				$scope.feed = data;
+				for (i = 0; i < 8; i++){
+					console.log($scope.feed[i].images.thumbnail);
+					deck[i] = $scope.feed[i].images.thumbnail.url;
 				}
-				$scope.deck[i] = card;
+
+				deck = deck.concat(deck);
+				deck = shuffle(deck);
+
+				for (i = 0; i < 16; i++){
+					card = {
+						src: deck[i],
+						show: 'images/back.jpg',
+						cleared: false,
+						flipped: false,
+					}
+					$scope.deck[i] = card;
+				}
+
+				$scope.total = 8;
+				$scope.plays = 0;
+				$scope.points = 0;
+				$scope.matches = 0;
+				$scope.message = '';
+
+				$scope.slot1 = null;
+				$scope.slot2 = null;
+
+				$scope.gameStarted = true;
+
 			}
 		});
-
-		
-		$scope.total = 8;
-		$scope.plays = 0;
-		$scope.points = 0;
-		$scope.matches = 0;
-		$scope.message = '';
-
-		$scope.slot1 = null;
-		$scope.slot2 = null;
-
-		$scope.gameStarted = true;
 
 	};
 

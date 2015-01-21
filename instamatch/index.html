@@ -17,7 +17,7 @@
 		<nav class="navbar-inverse">
   			<div class="container-fluid">
 	    		<div class="navbar-header">
-		      		<a class="navbar-brand" href="/instamatch">
+		      		<a class="navbar-brand" href="/">
 		        		InstaMatch
 		      		</a>
 	    		</div>
@@ -52,6 +52,8 @@
 				<div class="col-md-3 text-center" ng-show="gameStarted"> <p>Cards: <span ng-bind="matches" ></span>/<span ng-bind="total"></span></p></div>
 				<div class="col-md-3 text-center" ng-show="gameStarted"> <p><span ng-bind="message" ></span></p></div>
 			</div>
+
+			<div class="alert alert-danger" role="alert" ng-show="apiError"><span ng-bind="error"></span></div>
 
 			</br>
 
